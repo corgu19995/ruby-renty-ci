@@ -10,4 +10,6 @@ Rails.application.routes.draw do
 
   resources :rentals
   resources :pictures
+  resources :bookings
+  resources :type_vehicles
 end

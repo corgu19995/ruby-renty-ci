@@ -6,7 +6,8 @@ class CarsController < ApplicationController
         @cars = Car.all
         json_response(@cars)
     end
-    # GET /cars
+
+    # GET /cars/search
     def search
         @cars = Car.all
         if params[:type].present?
@@ -50,6 +51,8 @@ class CarsController < ApplicationController
     end
     
     def create
+        @typevehicle=TypeVehicle.find(params[:type_vehicle_id])
+        @rental =Rental.find(params[:rental_id])
         @car = Car.create!(car_params)
         json_response(@car, :created)
     end
@@ -126,7 +129,7 @@ class CarsController < ApplicationController
 
     def car_params
         # whitelist params
-        params.permit(:brand, :thumbnail, :price, :type, :model, :plate, :rating, :capacity, :transmission, :doors, :color, :kms, :pickup)
+        params.permit(:brand, :thumbnail, :price, :type, :model, :plate, :rating, :capacity, :transmission, :doors, :color, :kms, :pickup, :rental_id, :type_vehicle_id)
     end
 
     def set_car

@@ -10,14 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181117033511) do
+ActiveRecord::Schema.define(version: 20181128032009) do
+
+  create_table "bookings", force: :cascade do |t|
+    t.string "name"
+    t.integer "user_id"
+    t.integer "car_id"
+    t.datetime "from"
+    t.datetime "to"
+    t.index ["car_id"], name: "index_bookings_on_car_id"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
 
   create_table "cars", force: :cascade do |t|
     t.string "brand"
     t.string "thumbnail"
     t.string "price"
-    t.string "type"
     t.string "model"
+    t.integer "rental"
     t.string "plate"
     t.integer "rating"
     t.integer "capacity"
@@ -25,13 +35,10 @@ ActiveRecord::Schema.define(version: 20181117033511) do
     t.integer "doors"
     t.string "color"
     t.integer "kms"
-    t.string "pickup"
-  end
-
-  create_table "clients", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "rental_id"
+    t.integer "type_vehicle_id"
+    t.index ["rental_id"], name: "index_cars_on_rental_id"
+    t.index ["type_vehicle_id"], name: "index_cars_on_type_vehicle_id"
   end
 
   create_table "pictures", force: :cascade do |t|
@@ -42,12 +49,10 @@ ActiveRecord::Schema.define(version: 20181117033511) do
 
   create_table "rentals", force: :cascade do |t|
     t.string "name"
-    t.integer "user_id"
-    t.integer "car_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["car_id"], name: "index_rentals_on_car_id"
-    t.index ["user_id"], name: "index_rentals_on_user_id"
+  end
+
+  create_table "type_vehicles", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "users", force: :cascade do |t|

@@ -4,8 +4,8 @@ class CreateCars < ActiveRecord::Migration[5.1]
       t.string :brand
       t.string :thumbnail
       t.string :price
-      t.string :type
       t.string :model
+      t.integer :rental
       t.string :plate
       t.integer :rating
       t.integer :capacity
@@ -13,7 +13,8 @@ class CreateCars < ActiveRecord::Migration[5.1]
       t.integer :doors
       t.string :color
       t.integer :kms
-      t.string :pickup
+      t.references :rental, foreign_key: true
+      t.references :type_vehicle, foreign_key: true
     end
   end
 end
