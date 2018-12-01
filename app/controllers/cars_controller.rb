@@ -9,7 +9,20 @@ class CarsController < ApplicationController
 
     # GET /cars/search
     def search
-        @cars = Car.all
+        @cars = Car
+                .select("   cars.id,
+                            cars.brand,
+                            cars.model,
+                            cars.thumbnail,
+                            cars.price,
+                            type_vehicles.name as type,
+                            cars.rental_id,
+                            rentals.name
+                            "
+                        )
+                .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.id
+                        INNER JOIN rentals on rentals.id=cars.rental_id")
+
         if params[:type].present?
             @cars=@cars.where("type=?",params[:type])
         end
@@ -23,20 +36,9 @@ class CarsController < ApplicationController
             response +='"model":"'+car.model.to_s+'",' 
             response +='"thumbnail":"'+car.thumbnail.to_s+'",'            
             response +='"price":"'+car.price.to_s+'",'
-            response +='"type":"'+car.type.to_s+'",' 
-                        
-            @rentals=Rental
-                        .select('rentals.id,users.name')
-                        .joins(:user)
-                        .where("car_id=:car_id and created_at>=:created_at and updated_at<=:updated_at",
-                            car_id: car.id,created_at: params[:from],updated_at: params[:to])
-                        .take(1)
-            
-            response +='"rental":{"id":123456789,"name":"Ruby"'
-            # for rental in @rentals
-            #     response +='"id":"'+rental.id.to_s+'","name":"'+rental.name.to_s+'"' 
-            # end
-            response +='}}'
+            response +='"type":"'+car.type.to_s+'",'                        
+            response +='"rental":{"id":'+car.rental_id.to_s+',"name":"'+car.name.to_s+'"}'         
+            response +='}'
             
             if cont<@cars.length
                 response +=","
@@ -46,8 +48,6 @@ class CarsController < ApplicationController
         response +=']'
         data = JSON.parse(response)
         json_response(data)
-        #@cars = @cars.find_by!(brand: params[:brand]) if params[:brand].present?
-        #json_response(@cars)
     end
     
     def create
