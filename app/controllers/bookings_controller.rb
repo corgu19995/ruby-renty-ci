@@ -11,17 +11,20 @@ class BookingsController < ApplicationController
     # POST /bookings
     def create
         @bookings=Booking.all
-        #@bookings=@bookings.where("[from] >=current_date and to <=current_date",params[:from],params[:to])      
-        json_response(@bookings)  
-        # if @booking.nil?
-        #     data = JSON.parse('{"respuesta":"no se puede ingresar"}')
-        #     json_response(data)
-        # else
-        #     @car=Car.find(params[:car_id])
-        #     @user =User.find(params[:user_id])
-        #     @booking = Booking.create!(booking_params)
-        #     json_response(@booking, :created)
-        # end        
+        @bookings=@bookings.where(" (([from] between date(:from) and date(:to)) or  ([to] between date(:from) and date(:to)) or 
+                                    (date(:from) between [from] and [to]) or (date(:to) between [from] and [to])) and
+                                    car_id=:car_id",
+                                    {from:params[:from],to:params[:to],car_id:params[:car_id]})      
+        
+        if @bookings.blank?
+            @car=Car.find(params[:car_id])
+            @user =User.find(params[:user_id])
+            @booking = Booking.create!(booking_params)
+            json_response(@booking, :created)
+        else            
+            data = JSON.parse('{"res":"Vehículo no disponible para las fechas seleccionadas"}')
+            json_response(data)
+        end        
         
     end
 
