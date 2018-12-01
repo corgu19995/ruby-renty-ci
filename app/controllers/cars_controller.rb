@@ -10,7 +10,7 @@ class CarsController < ApplicationController
     def search
         @cars = Car.all
         if params[:type].present?
-            @cars=@cars.where("type=?",params[:type].downcase)
+            @cars=@cars.where("lower(type)=?",params[:type].downcase)
         end
         
         cont=1
