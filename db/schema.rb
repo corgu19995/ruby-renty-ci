@@ -13,11 +13,14 @@
 ActiveRecord::Schema.define(version: 20181128032009) do
 
   create_table "bookings", force: :cascade do |t|
-    t.string "name"
+    t.string "token"
     t.integer "user_id"
     t.integer "car_id"
-    t.datetime "from"
-    t.datetime "to"
+    t.datetime "bookingDate"
+    t.string "pickup"
+    t.datetime "pickupDate"
+    t.string "deliverPlace"
+    t.datetime "deliverDate"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end

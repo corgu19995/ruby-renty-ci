@@ -11,13 +11,14 @@ class BookingsController < ApplicationController
     # POST /bookings
     def create
         @bookings=Booking.all
-        @bookings=@bookings.where(" (([from] between date(:from) and date(:to)) or  ([to] between date(:from) and date(:to)) or 
-                                    (date(:from) between [from] and [to]) or (date(:to) between [from] and [to])) and
-                                    car_id=:car_id",
-                                    {from:params[:from],to:params[:to],car_id:params[:car_id]})      
+        @bookings=@bookings.where(" (([pickupDate] between date(:pickupDate) and date(:deliverDate)) or  ([deliverDate] between date(:pickupDate) and date(:deliverDate)) or 
+                                    (date(:pickupDate) between [pickupDate] and [deliverDate]) or (date(:deliverDate) between [pickupDate] and [deliverDate])) and
+                                    car_id=:carId",
+                                    {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
         
         if @bookings.blank?
-            @car=Car.find(params[:car_id])
+            params[:car_id]=params[:carId]
+            @car=Car.find(params[:carId])
             @user =User.find(params[:user_id])
             @booking = Booking.create!(booking_params)
             json_response(@booking, :created)
@@ -42,10 +43,13 @@ class BookingsController < ApplicationController
     # DELETE /bookings/:id
     def destroy
         @booking.destroy
-        head :no_content
+        data = JSON.parse('{"message":"Your booking has been deleted with success!"}')
+        json_response(data)
+        #head :no_content
     end
 
     def set_booking
+        print(params[:id]+"\n")
         @booking = Booking.find(params[:id])
     end
 
@@ -53,6 +57,6 @@ class BookingsController < ApplicationController
 
     def booking_params
         # whitelist params
-        params.permit(:name, :user_id, :car_id, :from, :to)
+        params.permit(:token, :user_id, :car_id, :bookingDate, :pickup, :pickupDate, :deliverPlace, :deliverDate)
     end
 end
