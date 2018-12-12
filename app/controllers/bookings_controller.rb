@@ -10,23 +10,29 @@ class BookingsController < ApplicationController
    
     # POST /bookings
     def create
-        @bookings=Booking.all
-        @bookings=@bookings.where(" (([pickupDate] between date(:pickupDate) and date(:deliverDate)) or  ([deliverDate] between date(:pickupDate) and date(:deliverDate)) or 
-                                    (date(:pickupDate) between [pickupDate] and [deliverDate]) or (date(:deliverDate) between [pickupDate] and [deliverDate])) and
-                                    car_id=:carId",
-                                    {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
-        
-        if @bookings.blank?
-            params[:car_id]=params[:carId]
-            @car=Car.find(params[:carId])
-            @user =User.find(params[:user_id])
-            @booking = Booking.create!(booking_params)
-            json_response(@booking, :created)
-        else            
-            data = JSON.parse('{"res":"Vehículo no disponible para las fechas seleccionadas"}')
+        validateToken=ValidateToken.new
+        response=validateToken.firebase(params[:token])
+        if response.blank?
+            data = JSON.parse('{"res":"Token no valido"}')
             json_response(data)
-        end        
-        
+        else
+            @bookings=Booking.all
+            @bookings=@bookings.where(" ((pickupDate between date(:pickupDate) and date(:deliverDate)) or  (deliverDate between date(:pickupDate) and date(:deliverDate)) or 
+                                        (date(:pickupDate) between pickupDate and deliverDate) or (date(:deliverDate) between pickupDate and deliverDate)) and
+                                        car_id=:carId",
+                                        {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
+            
+            if @bookings.blank?
+                params[:car_id]=params[:carId]
+                @car=Car.find(params[:carId])
+                @user =User.find(params[:user_id])
+                @booking = Booking.create!(booking_params)
+                json_response(@booking, :created)
+            else            
+                data = JSON.parse('{"res":"Vehículo no disponible para las fechas seleccionadas"}')
+                json_response(data)
+            end        
+        end
     end
 
     # GET /bookings/:id
