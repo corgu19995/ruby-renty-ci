@@ -20,11 +20,10 @@ class CarsController < ApplicationController
                             rentals.name
                             "
                         )
-                .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.id
+                .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.type_vehicle_id
                         INNER JOIN rentals on rentals.id=cars.rental_id")
-
         if params[:type].present?
-            @cars=@cars.where("type=?",params[:type])
+            @cars=@cars.where("cars.type_vehicle_id=?",params[:type])
         end
         
         cont=1

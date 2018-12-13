@@ -13,8 +13,7 @@
 ActiveRecord::Schema.define(version: 20181128032009) do
 
   create_table "bookings", force: :cascade do |t|
-    t.string "token"
-    t.integer "user_id"
+    t.string "user"
     t.integer "car_id"
     t.datetime "bookingDate"
     t.string "pickup"
@@ -22,7 +21,6 @@ ActiveRecord::Schema.define(version: 20181128032009) do
     t.string "deliverPlace"
     t.datetime "deliverDate"
     t.index ["car_id"], name: "index_bookings_on_car_id"
-    t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
   create_table "cars", force: :cascade do |t|
@@ -55,10 +53,6 @@ ActiveRecord::Schema.define(version: 20181128032009) do
   end
 
   create_table "type_vehicles", force: :cascade do |t|
-    t.string "name"
-  end
-
-  create_table "users", force: :cascade do |t|
     t.string "name"
   end
 

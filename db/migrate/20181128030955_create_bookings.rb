@@ -1,8 +1,7 @@
 class CreateBookings < ActiveRecord::Migration[5.1]
   def change
     create_table :bookings do |t|
-      t.string :token
-      t.references :user, foreign_key: true
+      t.string :user
       t.references :car, foreign_key: true
       t.datetime :bookingDate
       t.string :pickup

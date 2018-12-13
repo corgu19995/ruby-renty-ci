@@ -13,7 +13,7 @@ class BookingsController < ApplicationController
         validateToken=ValidateToken.new
         response=validateToken.firebase(params[:token])
         if response.blank?
-            data = JSON.parse('{"res":"Token no valido"}')
+            data = JSON.parse('{"message":"Token no valido"}')
             json_response(data)
         else
             @bookings=Booking.all
@@ -25,11 +25,11 @@ class BookingsController < ApplicationController
             if @bookings.blank?
                 params[:car_id]=params[:carId]
                 @car=Car.find(params[:carId])
-                @user =User.find(params[:user_id])
                 @booking = Booking.create!(booking_params)
-                json_response(@booking, :created)
+                data = JSON.parse('{"message":"Booking realizada correctamente"}')
+                json_response(data)
             else            
-                data = JSON.parse('{"res":"Vehículo no disponible para las fechas seleccionadas"}')
+                data = JSON.parse('{"message":"Vehículo no disponible para las fechas seleccionadas"}')
                 json_response(data)
             end        
         end
@@ -63,6 +63,6 @@ class BookingsController < ApplicationController
 
     def booking_params
         # whitelist params
-        params.permit(:token, :user_id, :car_id, :bookingDate, :pickup, :pickupDate, :deliverPlace, :deliverDate)
+        params.permit(:car_id, :bookingDate, :pickup, :pickupDate, :deliverPlace, :deliverDate)
     end
 end
