@@ -11,5 +11,5 @@ Rails.application.routes.draw do
   resources :pictures
   resources :bookings, :id => /.*/
   resources :type_vehicles
-  delete 'bookings', to: 'bookings#cancelarBookings'
+  put 'bookings', to: 'bookings#cancelarBookings'
 end
