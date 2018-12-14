@@ -15,23 +15,28 @@ class BookingsController < ApplicationController
             data = JSON.parse('{"message":"Token no valido"}')
             json_response(data)
         else
+            params[:car_id]=params[:carId]
+            params[:bookingdate]=params[:bookingDate]
+            params[:pickupdate]=params[:pickupDate]
+            params[:deliverplace]=params[:deliverPlace]
+            params[:deliverdate]=params[:deliverDate]
             @bookings=Booking.all
-            @bookings=@bookings.where(" ((pickupDate between date(:pickupDate) and date(:deliverDate)) or  (deliverDate between date(:pickupDate) and date(:deliverDate)) or 
-                                        (date(:pickupDate) between pickupDate and deliverDate) or (date(:deliverDate) between pickupDate and deliverDate)) and
+            @bookings=@bookings.where(" ((pickupdate between date(:pickupDate) and date(:deliverDate)) or  (deliverdate between date(:pickupDate) and date(:deliverDate)) or 
+                                        (date(:pickupDate) between pickupdate and deliverdate) or (date(:deliverDate) between pickupdate and deliverdate)) and
                                         car_id=:carId",
                                         {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
             
-            # if @bookings.length<=0
+            if @bookings.empty?
                 params[:car_id]=params[:carId]
                 params[:user]=response
                 @car=Car.find(params[:carId])
                 @booking = Booking.create!(booking_params)
                 data = JSON.parse('{"message":"Booking realizada correctamente"}')
                 json_response(data)
-            # else            
-            #     data = JSON.parse('{"message":"Vehículo no disponible para las fechas seleccionadas"}')
-            #     json_response(data)
-            # end        
+            else            
+                data = JSON.parse('{"message":"Vehículo no disponible para las fechas seleccionadas"}')
+                json_response(data)
+            end        
         end
     end
 
@@ -188,6 +193,6 @@ class BookingsController < ApplicationController
 
     def booking_params
         # whitelist params
-        params.permit(:user, :car_id, :bookingDate, :pickup, :pickupDate, :deliverPlace, :deliverDate)
+        params.permit(:user, :car_id, :bookingdate, :pickup, :pickupdate, :deliverplace, :deliverdate)
     end
 end
