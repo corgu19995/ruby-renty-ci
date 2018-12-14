@@ -59,7 +59,8 @@ class CarsController < ApplicationController
     # GET /cars/:id
     def show
         @car = Car
-                .select('cars.*')
+                .select('cars.*,type_vehicles.name as type_vehicles_name')
+                .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.type_vehicle_id")
                 .where('cars.id=?',params[:id])
         @rentals = Rental
                     .where('car_id=?',params[:id])   
@@ -78,7 +79,7 @@ class CarsController < ApplicationController
             response +='"brand":"'+car.brand.to_s+'",'
             response +='"thumbnail":"'+car.thumbnail.to_s+'",'            
             response +='"price":"'+car.price.to_s+'",'
-            response +='"type":"'+car.type.to_s+'",'
+            response +='"type":"'+car.type_vehicles_name.to_s+'",'
             response +='"model":"'+car.model.to_s+'",'            
             response +='"rental":{"id":123456789,"name":"Ruby"'
             # for rental in @rentals
