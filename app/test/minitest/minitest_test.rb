@@ -1,5 +1,5 @@
-require "minitest/autorun"
-​
+require 'minitest/autorun'
+
 class CarSearchTest < Minitest::Test
   def searchCars
     cars = CarsController.new
