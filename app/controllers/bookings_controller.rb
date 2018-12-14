@@ -120,7 +120,7 @@ class BookingsController < ApplicationController
             data = JSON.parse('{"message":"Token no valido"}')
             json_response(data)
         else
-            bookings= Booking
+            @bookings= Booking
                         .select("bookings.id as bookings_id,
                             bookings.bookingDate,
                             bookings.pickup,
@@ -140,38 +140,41 @@ class BookingsController < ApplicationController
                         .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.type_vehicle_id")
                         .where("bookings.user=:user and bookings.id=:bookingId",{user:localId,bookingId:params[:bookingId]})
             
-            if bookings.empty?
+            if @bookings.empty?
                 data = JSON.parse('{"message":"Reserva no encontrada"}')
                 json_response(data);  
             else
                 @bookingAux = Booking.find(params[:bookingId])
                 
-                #booking = bookings[0]
-                @car=Car.find(booking["car_id"])
-                response = '[
-                                {
-                                    "bookingId":"'+booking["bookings_id"].to_s+'",
-                                    "uid":"'+localId+'",
-                                    "car":{
-                                        "id":"'+booking["car_id"].to_s+'",
-                                        "brand":"'+booking["brand"].to_s+'",
-                                        "model":"'+booking["model"].to_s+'",
-                                        "thumbnail":"'+booking["thumbnail"].to_s+'",
-                                        "price":"'+booking["price"].to_s+'",
-                                        "type":"'+booking["type_vehicles_name"].to_s+'"
-                                    },
-                                    "bookingDate":"'+booking["bookingDate"].to_s+'",
-                                    "pickup":"'+booking["pickup"].to_s+'",
-                                    "pickupDate":"'+booking["pickupDate"].to_s+'",
-                                    "deliverPlace":"'+booking["deliverPlace"].to_s+'",
-                                    "deliverDate":"'+booking["deliverDate"].to_s+'",
-                                    "rental":{
-                                        "id":"'+booking["rental_id"].to_s+'",
-                                        "name":"'+booking["rental_name"].to_s+'"
+                for booking in @bookings
+                    @car=Car.find(booking["car_id"])
+                    response = '[
+                                    {
+                                        "bookingId":"'+booking["bookings_id"].to_s+'",
+                                        "uid":"'+localId+'",
+                                        "car":{
+                                            "id":"'+booking["car_id"].to_s+'",
+                                            "brand":"'+booking["brand"].to_s+'",
+                                            "model":"'+booking["model"].to_s+'",
+                                            "thumbnail":"'+booking["thumbnail"].to_s+'",
+                                            "price":"'+booking["price"].to_s+'",
+                                            "type":"'+booking["type_vehicles_name"].to_s+'"
+                                        },
+                                        "bookingDate":"'+booking["bookingDate"].to_s+'",
+                                        "pickup":"'+booking["pickup"].to_s+'",
+                                        "pickupDate":"'+booking["pickupDate"].to_s+'",
+                                        "deliverPlace":"'+booking["deliverPlace"].to_s+'",
+                                        "deliverDate":"'+booking["deliverDate"].to_s+'",
+                                        "rental":{
+                                            "id":"'+booking["rental_id"].to_s+'",
+                                            "name":"'+booking["rental_name"].to_s+'"
+                                        }
                                     }
-                                }
-                            ]'
-                @bookingAux.destroy
+                                ]'
+                    @bookingAux.destroy
+                    break
+                end
+                
                 json_response(JSON.parse(response))
             end
         end
