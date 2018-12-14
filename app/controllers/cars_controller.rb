@@ -63,7 +63,7 @@ class CarsController < ApplicationController
                 .where('cars.id=?',params[:id])
         @rentals = Rental
                     .where('car_id=?',params[:id])   
-                    .take(1)
+                    
         @pictures = Picture
                     .where('car_id=?',params[:id])
         
