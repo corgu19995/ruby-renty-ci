@@ -21,7 +21,7 @@ class BookingsController < ApplicationController
                                         car_id=:carId",
                                         {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
             
-            if @bookings.blank?
+            if @bookings.length<=0
                 params[:car_id]=params[:carId]
                 params[:user]=response
                 @car=Car.find(params[:carId])
