@@ -146,7 +146,7 @@ class BookingsController < ApplicationController
             else
                 @bookingAux = Booking.find(params[:bookingId])
                 
-                booking = bookings[0]
+                #booking = bookings[0]
                 @car=Car.find(booking["car_id"])
                 response = '[
                                 {
