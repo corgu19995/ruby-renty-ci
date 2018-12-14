@@ -21,17 +21,17 @@ class BookingsController < ApplicationController
                                         car_id=:carId",
                                         {pickupDate:params[:pickupDate],deliverDate:params[:deliverDate],carId:params[:carId]})      
             
-            if @bookings.length<=0
+            # if @bookings.length<=0
                 params[:car_id]=params[:carId]
                 params[:user]=response
                 @car=Car.find(params[:carId])
                 @booking = Booking.create!(booking_params)
                 data = JSON.parse('{"message":"Booking realizada correctamente"}')
                 json_response(data)
-            else            
-                data = JSON.parse('{"message":"Vehículo no disponible para las fechas seleccionadas"}')
-                json_response(data)
-            end        
+            # else            
+            #     data = JSON.parse('{"message":"Vehículo no disponible para las fechas seleccionadas"}')
+            #     json_response(data)
+            # end        
         end
     end
 
