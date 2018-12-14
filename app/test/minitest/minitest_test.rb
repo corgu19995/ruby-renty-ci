@@ -1,5 +1,4 @@
 require "minitest/autorun"
-require "../../controllers/cars_controller.rb"
 ​
 class CarSearchTest < Minitest::Test
   def searchCars
