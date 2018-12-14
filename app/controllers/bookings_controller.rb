@@ -139,7 +139,7 @@ class BookingsController < ApplicationController
                         .joins("INNER JOIN rentals on rentals.id=cars.rental_id")   
                         .joins("INNER JOIN type_vehicles on type_vehicles.id=cars.type_vehicle_id")
                         .where("bookings.user=:user and bookings.id=:bookingId",{user:localId,bookingId:params[:bookingId]})
-                        .take
+                        #.take
             
             if @booking.blank?
                 data = JSON.parse('{"message":"Reserva no encontrada"}')
