@@ -30,6 +30,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'json'
    gem 'sqlite3'
+   gem 'httparty', '~> 0.16.3'
 end
 
 group :test do
@@ -47,6 +48,7 @@ end
 group :production do 
   gem 'pg'
   gem 'rails_12factor'
+  gem 'httparty', '~> 0.16.3'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
