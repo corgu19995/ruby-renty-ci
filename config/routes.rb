@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :rentals
   resources :pictures
-  resources :bookings
+  resources :bookings, :id => /.*/
   resources :type_vehicles
+  delete 'bookings', to: 'bookings#cancelarBookings'
 end
