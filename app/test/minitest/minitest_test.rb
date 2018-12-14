@@ -1,5 +1,5 @@
 require "minitest/autorun"
-require "../controllers/cars_controller"
+require "../controllers/cars_controller.tb"
 ​
 class CarSearchTest < Minitest::Test
   def searchCars
